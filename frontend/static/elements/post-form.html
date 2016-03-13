@@ -1,0 +1,47 @@
+
+<link rel="import" href="https://www.polymer-project.org/0.5/components/polymer/polymer.html">
+<link rel="import" href="https://www.polymer-project.org/0.5/components/paper-input/paper-input.html">
+<link rel="import" href="https://www.polymer-project.org/0.5/components/paper-input/paper-input-decorator.html">
+<link rel="import" href="https://www.polymer-project.org/0.5/components/paper-input/paper-autogrow-textarea.html">
+<link rel="import" href="https://www.polymer-project.org/0.5/components/paper-button/paper-button.html">
+<link rel="import" href="https://www.polymer-project.org/0.5/components/paper-dialog/paper-dialog.html">
+<polymer-element name="post-form" attributes="posts service">
+    <template>
+        <paper-dialog id="dialog" heading="new post">
+            <paper-input-decorator id="named" floatingLabel label="Name" error="Name is required" is-invalid="true">
+                <input id="name" is="core-input" required>
+            </paper-input-decorator>
+            <paper-input-decorator id="textd" floatingLabel label="Text" error="Text is required">
+                <input id="text" is="core-input" required>
+            </paper-input-decorator>
+            <paper-input-decorator id="avatard" floatingLabel label="Avatar URL" error="Avatar URL is required">
+                <input id="avatar" is="core-input" required>
+            </paper-input-decorator>
+            <paper-button dismissive on-click="{{toggle}}">Cancel</paper-button>
+            <paper-button affirmative default on-click="{{addTask}}">OK</paper-button>
+        </paper-dialog>
+    </template>
+    <script>
+    Polymer('post-form', {
+        toggle: function() {
+            this.$.dialog.toggle();
+        },
+        addTask: function() {
+            if (!this.$.named.validate() ||
+                !this.$.textd.validate() ||
+                !this.$.avatard.validate()) return;
+
+            this.toggle();
+            this.service.addPost({
+                'username': this.$.name.value,
+                'text': this.$.text.value,
+                'avatar': this.$.avatar.value,
+            });
+
+            this.$.name.value = '';
+            this.$.text.value = '';
+            this.$.avatar.value = '';
+        }
+    });
+    </script>
+</polymer-element>
